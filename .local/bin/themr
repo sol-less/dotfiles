@@ -1,0 +1,27 @@
+#!/bin/bash
+
+options="󰬺    Black\n󰬻    Blue\n󰬼    Cozy\n󰬽    Neutral\n󰬾    Others"
+
+choice=$(echo -e "$options" | rofi -dmenu -i -p "  " -theme-str ' entry { placeholder: "Theme.."; }' -no-show-icons)
+
+case $choice in
+*"Black")
+  ./.local/bin/themeholder/black
+  ;;
+
+*"Blue")
+  ./.local/bin/themeholder/blue
+  ;;
+
+*"Cozy")
+  ./.local/bin/themeholder/cozy
+  ;;
+
+*"Neutral")
+  ./.local/bin/themeholder/neutral
+  ;;
+
+*"Others")
+  ./.local/bin/themeholder/others
+  ;;
+esac

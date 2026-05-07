@@ -1,0 +1,17 @@
+/* Matugen Generated Colors */
+@define-color surface-0 #0f1416;
+@define-color surface-1 #171c1f;
+@define-color surface-2 #1b2023;
+@define-color surface-3 #252b2d;
+
+@define-color primary #88d1eb;
+@define-color on-primary #003543;
+
+@define-color secondary #b3cad4;
+@define-color tertiary #c3c3eb;
+
+@define-color error #ffb4ab;
+@define-color text #dee3e6;
+@define-color text-variant #bfc8cc;
+
+@define-color border-color #8a9296;

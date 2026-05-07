@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $0 <path_to_image>"
+  exit 1
+fi
+
+IMAGE="$1"
+
+# Execution
+
+matugen image "$IMAGE"
+
+# After Execution
+sleep 1
+notify-send "hyprtheme" "Wallpaper and theme updated successfully!"

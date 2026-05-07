@@ -1,0 +1,138 @@
+#!/bin/bash
+
+header() {
+    [[ "$QUIET" == "false" ]] && echo -e "${PRIMARY}${BOLD}
+󰮯  PKG Manager
+${SECONDARY}󰏗  Unified Repo • AUR • Flatpak${NC}\n"
+}
+
+
+# --- Matugen-Inspired Colors ---
+PRIMARY='\033[38;5;111m'  
+SECONDARY='\033[38;5;147m' 
+TERTIARY='\033[38;5;120m'
+ERROR='\033[38;5;203m'
+NC='\033[0m'               
+BOLD='\033[1m'
+
+# --- Variables ---
+CONFIRM=true
+QUIET=false
+ARGS=()
+
+# --- Parse Flags ---
+for arg in "$@"; do
+    case $arg in
+        --no-confirmation) CONFIRM=false ;;
+        -q) QUIET=true ;;
+        *) ARGS+=("$arg") ;; 
+    esac
+done
+
+set -- "${ARGS[@]}"
+
+# --- UI Elements ---
+msg() { 
+    [[ "$QUIET" == "false" ]] && \
+    echo -e "${PRIMARY}${BOLD}::${NC} ${PRIMARY}$1${NC}"
+}
+err() { echo -e "${ERROR}󰅙${NC} $1"; }
+
+# --- Cool Elements ---
+spinner() {
+    local pid=$!
+    local spin='|/-\'
+    local i=0
+    while kill -0 $pid 2>/dev/null; do
+        i=$(( (i+1) %4 ))
+        printf "\r${TERTIARY}󰜎${NC} Working... ${spin:$i:1}"
+        sleep .1
+    done
+    printf "\r"
+}
+
+
+# --- Smart Check Logic ---
+# Returns 1 for Pacman, 2 for AUR, 0 for Cancel
+get_source() {
+    local pkg_to_check=$1
+    
+    # Smart Logic for --no-confirmation
+    if [[ "$CONFIRM" == "false" ]]; then
+        if pacman -Si "$pkg_to_check" &> /dev/null; then
+            return 1 # Found in Pacman
+        else
+            return 2 # Fallback to AUR
+        fi
+    fi
+
+    # Manual Selection Mode
+    echo -e "\n${SECONDARY}󰋗${NC} Source for ${BOLD}$pkg_to_check${NC}:"
+    echo -e "  ${PRIMARY}1)${NC} Pacman  ${SECONDARY}2)${NC} AUR  ${TERTIARY}3)${NC} Flatpak  ${ERROR}4)${NC} Cancel"
+    echo -ne "\n${BOLD}Tap a number: ${NC}"
+    read -rn1 choice
+    echo -e "\n"
+    
+    case "$choice" in
+        1) return 1 ;;
+        2) return 2 ;;
+        3) return 3 ;;
+        *) return 0 ;;
+    esac
+}
+
+case "$1" in
+    pull)
+        shift; pkg="$*"
+        [ -z "$pkg" ] && { err "Specify a package!"; exit 1; }
+        get_source "$pkg"
+        choice=$?
+        
+        case "$choice" in
+            1) msg "Pulling from Repo..."; sudo pacman -S --noconfirm $pkg & spinner;;
+            2) msg "Pulling from AUR..."; yay -S --noconfirm $pkg & spinner;;
+            3) msg "Pulling from Flatpak..."; flatpak install -y flathub $pkg ;;
+            *) err "Operation cancelled." ;;
+        esac
+        ;;
+
+    push)
+        shift; pkg="$*"
+        [ -z "$pkg" ] && { err "Specify a package!"; exit 1; }
+        
+        # We always ask for source on push for safety, unless --no-confirmation is on
+        if [[ "$CONFIRM" == "false" ]]; then
+             msg "Auto-pushing (Pacman priority)..."
+             sudo pacman -Rns --noconfirm $pkg 2>/dev/null || yay -Rns --noconfirm $pkg
+        else
+            get_source "$pkg"
+            choice=$?
+            case "$choice" in
+                1) msg "Pushing from Repo..."; sudo pacman -Rns --noconfirm $pkg ;;
+                2) msg "Pushing from AUR..."; yay -Rns --noconfirm $pkg ;;
+                3) msg "Pushing from Flatpak..."; flatpak uninstall -y $pkg ;;
+                *) err "Cancelled." ;;
+            esac
+        fi
+        ;;
+
+    sync)
+        msg "Full Sync (Repo + AUR + Flatpak)..."
+        sudo pacman -Syu --noconfirm && yay -Sua --noconfirm && flatpak update -y
+        ;;
+
+    search)
+        shift
+        msg "Searching Repo/AUR..."
+        yay -Ss "$@"
+        [[ "$QUIET" == "false" ]] && echo "" && msg "Searching Flatpak..."
+        flatpak search "$@"
+        ;;
+
+    *)
+        echo -e "${PRIMARY}${BOLD}󰮯 PKG Manager${NC}"
+        echo -e "  pkg pull <name>   [--no-confirmation]"
+        echo -e "  pkg push <name>   [--no-confirmation]"
+        echo -e "  pkg sync"
+        ;;
+esac

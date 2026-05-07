@@ -1,0 +1,91 @@
+#!/bin/bash
+
+WALL_DIR="$HOME/.config/helper/wallpapers"
+
+case "$1" in
+wal)
+  CACHE_FILE="$HOME/.cache/helper/current.wall"
+  mkdir -p "$(dirname "$CACHE_FILE")"
+
+  # get last wallpaper
+  last_wall=""
+  [ -f "$CACHE_FILE" ] && last_wall=$(cat "$CACHE_FILE")
+
+  # pick random but avoid last one
+  wall=$(find "$WALL_DIR" -type f | grep -vxF "$last_wall" | shuf -n 1)
+
+  # fallback if empty (like only 1 wallpaper exists)
+  if [ -z "$wall" ]; then
+    wall=$(find "$WALL_DIR" -type f | shuf -n 1)
+  fi
+
+  if [ -z "$wall" ]; then
+    echo "no wallpapers found 💀"
+    exit 1
+  fi
+
+  # apply
+  matugen image --source-color-index 0 "$wall"
+
+  kill -SIGUSR1 $(pgrep kitty) 2>/dev/null
+
+  kill -SIGUSR2 $(pgrep cava) 2>/dev/null
+
+  # save current wallpaper
+  echo "$wall" >"$CACHE_FILE"
+
+  sleep 2
+
+	notify-send "Helper" "$wall"
+
+  echo "switched to $wall"
+  ;;
+
+close)
+  if [ "$2" == "--app" ]; then
+    app="$3"
+
+    if [ -z "$app" ]; then
+      echo "close failed: invalid app"
+      exit 1
+    fi
+
+    # kill app by class/title
+    hyprctl clients -j | jq -r ".[] | select(.class | test(\"$app\"; \"i\")) | .address" |
+      while read addr; do
+        hyprctl dispatch closewindow address:$addr
+      done
+
+  else
+    # close all apps from workspace 1 to N
+    max_ws="$2"
+
+    if [ -z "$max_ws" ]; then
+      echo "close failed: invalid workspace"
+      exit 1
+    fi
+
+    hyprctl clients -j | jq -r ".[] | select(.workspace.id <= $max_ws) | .address" |
+      while read addr; do
+        hyprctl dispatch closewindow address:$addr
+      done
+  fi
+  ;;
+
+focus)
+	hyprctl dispatch workspace 3
+	
+	if pgrep -f "Clock.qml" >/dev/null; then
+		pkill -f "Clock.qml"
+	fi
+
+	./.config/quickshell/assets/clock.sh & disown
+	kitty --hold sh -c "cava"
+	;;
+*)
+  echo "usage:"
+  echo "  helper wal"
+  echo "  helper close <workspace_number>"
+  echo "  helper close --app <app_name>"
+  ;;
+esac

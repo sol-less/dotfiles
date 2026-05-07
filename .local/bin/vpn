@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Color Palette
+CYAN='\033[0;36m'
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+PURPLE='\033[0;35m'
+BOLD='\033[1m'
+NC='\033[0m' 
+
+# A quick "pop" animation/header
+echo -e "${PURPLE}${BOLD}⚡ PROTON SHIELD ⚡${NC}"
+echo -e "${PURPLE}─────────────────────${NC}"
+
+print_status() {
+    echo -e "${CYAN}${BOLD}::${NC} $1..."
+}
+
+case "$1" in
+    con)
+        print_status "Establishing Secure Tunnel"
+        # Using "${@:2}" lets you pass arguments like 'vpn con us-free-1'
+        protonvpn connect "${@:2}" && echo -e "\n${GREEN}${BOLD}✔ ONLINE${NC}"
+        ;;
+    dicon)
+        print_status "Tearing Down Tunnel"
+        protonvpn disconnect && echo -e "\n${RED}${BOLD}✘ OFFLINE${NC}"
+        ;;
+    --in)
+        print_status "Authenticating with Proton Servers"
+        protonvpn signin "${@:2}"
+        ;;
+    --out)
+        print_status "Terminating Session"
+        protonvpn signout "${@:2}"
+        ;;
+    *)
+        echo -e "${BOLD}Available Commands:${NC}"
+        echo -e "  ${CYAN}con${NC}    - Connect to VPN"
+        echo -e "  ${CYAN}dicon${NC}  - Disconnect"
+        echo -e "  ${CYAN}--in${NC}   - Sign In"
+        echo -e "  ${CYAN}--out${NC}  - Sign Out"
+        exit 1
+        ;;
+esac

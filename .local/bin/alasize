@@ -1,0 +1,11 @@
+#!/bin/bash
+
+ACTIVE_CLASS=$(hyprctl activewindow -j | jq -r '.class')
+
+if [ "$ACTIVE_CLASS" = "Alacritty" ]; then
+    hyprctl dispatch resizeactive exact 800 400
+    ~/.config/hypr/configs/scripts/centerised_float.sh
+else
+    exit 0
+fi
+

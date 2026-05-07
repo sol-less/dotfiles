@@ -1,0 +1,24 @@
+/* Matugen GTK 3 Template */
+
+@define-color theme_fg_color @{on_surface};
+@define-color theme_bg_color @{surface};
+@define-color theme_text_color @{on_surface};
+@define-color theme_base_color @{surface_container};
+
+@define-color theme_selected_bg_color @{primary};
+@define-color theme_selected_fg_color @{on_primary};
+
+@define-color insensitive_bg_color @{surface_container_low};
+@define-color insensitive_fg_color @{outline};
+
+@define-color borders @{outline_variant};
+@define-color warning_color @{secondary};
+@define-color error_color @{error};
+@define-color success_color @{primary};
+
+/* Specific for some GTK 3 apps that use header bars */
+headerbar {
+    background-color: @{surface_container_high};
+    color: @{on_surface};
+    border-color: @{outline_variant};
+}

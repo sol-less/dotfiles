@@ -1,0 +1,22 @@
+:root {
+   --matugen-bg: {{colors.surface.default.hex}};
+   --matugen-fg: {{colors.on_surface.default.hex}};
+   --matugen-primary: {{colors.primary.default.hex}};
+   --matugen-secondary: {{colors.secondary.default.hex}};
+   --matugen-accent: {{colors.tertiary.default.hex}};
+}
+
+/* Basic UI Inject */
+.monaco-workbench {
+   background-color: var(--matugen-bg) !important;
+   color: var(--matugen-fg) !important;
+}
+
+.part.sidebar {
+   background-color: {{colors.surface_container.default.hex}} !important;
+}
+
+.monaco-list.extrabold .monaco-list-row.selected {
+   background-color: var(--matugen-primary) !important;
+   color: var(--matugen-bg) !important;
+}

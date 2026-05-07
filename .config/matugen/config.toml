@@ -1,0 +1,81 @@
+[config]
+reload_apps = true
+set_wallpaper = true
+wallpaper_tool = "Awww"
+
+[config.wallpaper]
+set = true
+command = "awww img --transition-type outer --transition-pos top-right {{ image }}"
+
+[templates.alacritty]
+input_path = "/home/sol_/.config/matugen/templates/alacritty.toml"
+output_path = "/home/sol_/.config/alacritty/colors.toml"
+post_hook = "touch /home/sol_/.config/alacritty/alacritty.toml"
+
+[templates.quickshell]
+input_path = "~/.config/matugen/templates/shxll.qml"
+output_path = "~/.config/quickshell/assets/color/Colors.qml"
+
+[templates.rofi]
+input_path = "/home/sol_/.config/matugen/templates/rofi.rasi"
+output_path = "/home/sol_/.config/rofi/colors/matugen.rasi"
+
+[templates.vscodium_theme]
+input_path = "/home/sol_/.config/matugen/templates/vscodium-theme.json"
+output_path = "/home/sol_/.vscode-oss/extensions/matugen-theme/themes/vscodium-theme.json"
+
+[templates.swaync]
+input_path = "/home/sol_/.config/matugen/templates/swaync.css"
+output_path = "/home/sol_/.config/swaync/themes/colors.css"
+
+[templates.swayosd]
+input_path = "~/.config/matugen/templates/swayosd.css"
+output_path = "~/.config/swayosd/colors.css"
+
+[templates.discord]
+input_path = "~/.config/matugen/templates/matugen-night.css"
+output_path = "~/.config/Vencord/themes/matugen-night.css"
+
+[templates.kitty]
+input_path = "~/.config/matugen/templates/kitty.conf"
+output_path = "~/.config/kitty/colors-matugen.conf"
+
+[templates.zsh]
+input_path = "~/.config/matugen/templates/zsh.sh"
+output_path = "~/.config/zsh/colors.sh"
+
+[templates.hyprland]
+input_path = "~/.config/matugen/templates/hypr.conf"
+output_path = "~/.config/hypr/configs/settings/colors.conf"
+
+[templates.cava]
+input_path = "~/.config/matugen/templates/cava"
+output_path = "~/.config/cava/config"
+
+[config.custom_colors.red]
+color = "#FF0000"
+blend = true
+
+[config.custom_colors.green]
+color = "#00FF00"
+blend = true
+
+[config.custom_colors.yellow]
+color = "#FFFF00"
+blend = true
+
+[config.custom_colors.blue]
+color = "#0000FF"
+blend = true
+
+[config.custom_colors.magenta]
+color = "#FF00FF"
+blend = true
+
+[config.custom_colors.cyan]
+color = "#00FFFF"
+blend = true
+
+[config.custom_colors.white]
+color = "#FFFFFF"
+blend = true

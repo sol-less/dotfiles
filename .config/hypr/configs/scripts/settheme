@@ -1,0 +1,24 @@
+#!/bin/bash
+
+options="󰬺    Change Theme\n󰬻    Waybar Config\n󰬼    Hyprland Config\n󰬽    Select Directory"
+
+choice=$(echo -e "$options" | rofi -dmenu -i -p "  " -theme-str ' entry { placeholder: "Theme Settings.."; }' -no-show-icons)
+
+case $choice in
+*"Change Theme")
+  echo -e "Cozy\nNeutral\nBlack\nBlue\nOthers\nLive" |  rofi -dmenu -i -p "  " -theme-str ' entry { placeholder: "Theme Select.."; }' -no-show-icons | xargs ~/.local/bin/theme
+  ;;
+
+*"Waybar Config")
+  alacritty --command nvim $HOME/.config/waybar/
+  ;;
+
+*"Hyprland Config")
+  alacritty --command nvim $HOME/.config/hypr/configs/
+  ;;
+
+*"Select Directory")
+  alacritty --command nvim $HOME
+  ;;
+esac
+

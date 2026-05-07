@@ -1,0 +1,80 @@
+#!/bin/bash
+
+BASE="$HOME/Pictures/Wallpapers"
+CACHE="$HOME/.cache/current_wallpaper"
+THEME="$1"
+
+if [ -z "$THEME" ]; then
+    echo "Usage: $0 <theme_name>"
+    exit 1
+fi
+
+DIR="$BASE/$THEME"
+
+if [ ! -d "$DIR" ]; then
+    notify-send "Theme Switcher" "Theme '$THEME' not found."
+    exit 1
+fi
+
+LAST=""
+[ -f "$CACHE" ] && LAST=$(cat "$CACHE")
+
+# NOW supports images + videos
+WALL=$(find "$DIR" -type f \( \
+    -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o \
+    -iname "*.mp4" -o -iname "*.webm" \
+\) | grep -vF "$LAST" | shuf -n 1)
+
+if [ -z "$WALL" ]; then
+    WALL=$(find "$DIR" -type f \( \
+        -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o \
+        -iname "*.mp4" -o -iname "*.webm" \
+    \) | shuf -n 1)
+fi
+
+COLOR_INDEX=$(( RANDOM % 4 ))
+EXT="${WALL##*.}"
+
+echo "$WALL" > "$CACHE"
+
+# if video wallpaper
+if [[ "$EXT" == "mp4" || "$EXT" == "webm" ]]; then
+    # extract frame for matugen colors
+    ffmpeg -y -i "$WALL" -frames:v 1 /tmp/matugen_frame.png >/dev/null 2>&1
+    
+    if matugen image /tmp/matugen_frame.png --source-color-index "$COLOR_INDEX"; then
+        notify-send "Theme Switcher" "Mode: $THEME (Live) | Color Index: $COLOR_INDEX"
+    else
+        matugen image /tmp/matugen_frame.png --source-color-index 0
+        notify-send "Theme Switcher" "Mode: $THEME (Live) | Color Index: Fallback"
+    fi
+
+    # IMPORTANT: stop swww so video is visible
+    pkill swww-daemon 2>/dev/null
+    pkill mpvpaper 2>/dev/null
+
+    # apply live wallpaper to all monitors
+    mpvpaper -o "loop" '*' "$WALL" &
+
+else
+    # normal image workflow (unchanged)
+    pkill mpvpaper 2>/dev/null
+    pgrep swww-daemon > /dev/null || swww-daemon &
+    
+    if matugen image "$WALL" --source-color-index "$COLOR_INDEX"; then
+        notify-send "Theme Switcher" "Mode: $THEME | Color Index: $COLOR_INDEX" -i "$WALL"
+    else
+        matugen image "$WALL" --source-color-index 0
+        notify-send "Theme Switcher" "Mode: $THEME | Color Index: Failed, at 0 now." -i "$WALL"
+    fi
+fi
+
+# sync for rofi background
+ROFI_WALL="$HOME/.cache/current_wall.png"
+
+if [[ "$EXT" == "mp4" || "$EXT" == "webm" ]]; then
+    # use extracted frame for rofi (since rofi can't show video)
+    cp /tmp/matugen_frame.png "$ROFI_WALL"
+else
+    cp "$WALL" "$ROFI_WALL"
+fi

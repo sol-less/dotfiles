@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Target Spotify specifically in case other players are open
+PLAYER="playerctl --player=spotify"
+
+case "$1" in
+    play|pause|toggle)
+        $PLAYER play-pause
+        echo "Toggled!"
+        ;;
+    next)
+        $PLAYER next
+        $PLAYER metadata --format "Now Playing {{ artist }} - {{ title }} [{{ duration(position) }}/{{ duration(mpris:length) }}]"
+        ;;
+    prev)
+        $PLAYER previous
+        $PLAYER metadata --format "Now Playing {{ artist }} - {{ title }} [{{ duration(position) }}/{{ duration(mpris:length) }}]"
+        ;;
+    status)
+        $PLAYER metadata --format "Now Playing: {{ artist }} - {{ title }} [{{ duration(position) }}/{{ duration(mpris:length) }}]"
+        ;;
+    *)
+        echo "Usage: scli {play|next|prev|status}"
+        ;;
+esac

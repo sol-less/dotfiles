@@ -1,0 +1,12 @@
+#################
+### IMPORTANT ###
+#################
+
+# Everything from this file has been moved and organized to ~/.config/hypr/configs/settings/
+# Inside that folder, every config has been organized properly.
+
+source = ~/.config/hypr/configs/all.conf
+
+# IF THAT SOURCED FAILED PLEASE SOURCE ALL FILE FROM ~/.config/hypr/configs/settings/ TO WORK!
+# = Source for hyprviz
+source = ./hyprviz.conf

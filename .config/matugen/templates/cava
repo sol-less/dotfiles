@@ -1,0 +1,26 @@
+[general]
+# You can tweak these as you like
+framerate = 120
+autosens = 1
+bars = 10
+bar_width = 5
+bar_spacing = 1
+
+[input]
+method = pulse
+source = auto
+
+[output]
+method = ncurses
+
+[color]
+# This is where the magic happens
+gradient = 1
+gradient_count = 5
+
+# Mapping Matugen colors to CAVA's gradient
+gradient_color_1 = '{{colors.primary.default.hex}}'
+gradient_color_2 = '{{colors.secondary.default.hex}}'
+gradient_color_3 = '{{colors.tertiary.default.hex}}'
+gradient_color_4 = '{{colors.primary_container.default.hex}}'
+gradient_color_5 = '{{colors.secondary_container.default.hex}}'

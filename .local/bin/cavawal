@@ -1,0 +1,23 @@
+#!/bin/bash
+COLORS=($(cat ~/.cache/wal/colors))
+
+cat >~/.config/cava/config <<EOF
+[input]
+method=pipewire
+source=auto
+
+[general]
+bar_width=3
+bar_spacing=1
+framerate=60
+
+[color]
+gradient=1
+gradient_color_1="${COLORS[1]}"
+gradient_color_2="${COLORS[2]}"
+
+[output]
+method=ncurses
+EOF
+
+cava

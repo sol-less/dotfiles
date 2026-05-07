@@ -1,0 +1,38 @@
+#!/bin/bash
+
+BASE="$HOME/.local/share/.cached/"
+CACHE="$HOME/.cache/cached_wall"
+THEME="$1"
+
+if [ -z "$THEME" ]; then
+    echo "Usage: $0 <theme_name>"
+    exit 1
+fi
+
+DIR="$BASE/$THEME"
+
+if [ ! -d "$DIR" ]; then
+    notify-send "Theme Switcher" "Theme '$THEME' not found."
+    exit 1
+fi
+
+LAST=""
+[ -f "$CACHE" ] && LAST=$(cat "$CACHE")
+
+WALL=$(find "$DIR" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" \) | grep -vF "$LAST" | shuf -n 1)
+
+if [ -z "$WALL" ]; then
+    WALL=$(find "$DIR" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" \) | shuf -n 1)
+fi
+
+COLOR_INDEX=$(( RANDOM % 4 ))
+
+echo "$WALL" > "$CACHE"
+if matugen image "$WALL" --source-color-index "$COLOR_INDEX"; then
+    echo "$WALL" > "$CACHE"
+    notify-send "Theme Switcher" "Mode: $THEME | Color Index: $COLOR_INDEX" -i "$WALL"
+else
+    matugen image "$WALL" --source-color-index 0
+    notify-send "Theme Switcher" "Mode: $THEME | Color Index: Failed, at 0 now." -i "$WALL"
+fi
+

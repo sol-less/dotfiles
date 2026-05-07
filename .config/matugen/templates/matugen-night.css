@@ -1,0 +1,97 @@
+/**
+ * @name matugen-night
+ * @description a matugen-based theme.
+ * @author sol_
+ * @version 1.0.a-alpha
+*/
+
+/* import theme modules */
+@import url('https://refact0r.github.io/midnight-discord/build/midnight.css');
+
+body {
+    --font: 'figtree';
+    --code-font: '';
+    --gap: 12px;
+    --divider-thickness: 4px;
+    --border-thickness: 1px;
+    --animations: on;
+    --list-item-transition: 0.2s ease;
+    --dms-icon-svg-transition: 0.4s ease;
+    --border-hover-transition: 0.2s ease;
+    --top-bar-height: var(--gap);
+    --top-bar-button-position: titlebar;
+    --top-bar-title-position: off;
+    --subtle-top-bar-title: off;
+    --custom-window-controls: on;
+    --window-control-size: 14px;
+    --custom-dms-icon: custom;
+    --dms-icon-svg-url: url('https://refact0r.github.io/midnight-discord/assets/Font_Awesome_5_solid_moon.svg');
+    --dms-icon-svg-size: 90%;
+    --dms-icon-color-before: var(--icon-subtle);
+    --dms-icon-color-after: var(--white);
+    --custom-dms-background: off;
+    --background-image: off;
+    --transparency-tweaks: off;
+    --remove-bg-layer: off;
+    --panel-blur: off;
+    --blur-amount: 12px;
+    --bg-floating: var(--bg-3);
+    --custom-chatbar: off;
+    --chatbar-height: 47px;
+    --small-user-panel: on;
+}
+
+/* color options */
+:root {
+    --colors: on;
+
+    /* text colors */
+    --text-0: {{colors.on_primary_container.default.hex}};
+    --text-1: {{colors.on_surface.default.hex}};
+    --text-2: {{colors.on_surface_variant.default.hex}};
+    --text-3: {{colors.outline.default.hex}};
+    --text-4: {{colors.outline_variant.default.hex}};
+    --text-5: {{colors.surface_variant.default.hex}};
+
+    /* background and dark colors */
+    --bg-1: {{colors.surface_container_high.default.hex}};
+    --bg-2: {{colors.surface_container.default.hex}};
+    --bg-3: {{colors.surface_container_low.default.hex}};
+    --bg-4: {{colors.surface.default.hex}}; 
+    
+    --hover: {{colors.on_surface.default.hex}}1a; /* 10% opacity */
+    --active: {{colors.on_surface.default.hex}}33; /* 20% opacity */
+    --active-2: {{colors.on_surface.default.hex}}4d; /* 30% opacity */
+    --message-hover: {{colors.on_surface.default.hex}}0d; /* 5% opacity */
+
+    /* accent colors */
+    --accent-1: {{colors.primary.default.hex}};
+    --accent-2: {{colors.secondary.default.hex}};
+    --accent-3: {{colors.primary_container.default.hex}};
+    --accent-4: {{colors.secondary_container.default.hex}};
+    --accent-5: {{colors.tertiary.default.hex}};
+    --accent-new: {{colors.primary.default.hex}};
+
+    --mention: linear-gradient(to right, {{colors.primary.default.hex}}1a 40%, transparent);
+    --mention-hover: linear-gradient(to right, {{colors.primary.default.hex}}26 40%, transparent);
+
+    /* status indicator colors */
+    --online: #43b581; /* Discord Green */
+    --dnd: {{colors.error.default.hex}};
+    --idle: {{colors.tertiary.default.hex}};
+    --streaming: #593695;
+    --offline: {{colors.outline.default.hex}};
+
+    /* border colors */
+    --border-light: {{colors.outline_variant.default.hex}};
+    --border: {{colors.outline.default.hex}};
+    --border-hover: {{colors.primary.default.hex}};
+    --button-border: {{colors.outline_variant.default.hex}};
+
+    /* base colors - Using MD3 Palettes */
+    --red-1: {{colors.error.default.hex}};
+    --green-1: #43b581;
+    --blue-1: {{colors.primary.default.hex}};
+    --yellow-1: {{colors.tertiary.default.hex}};
+    --purple-1: {{colors.secondary.default.hex}};
+}
